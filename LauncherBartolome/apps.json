@@ -1,0 +1,10 @@
+[
+  {
+    "Name": "Bloc de Notas",
+    "ExecutablePath": "notepad.exe"
+  },
+  {
+    "Name": "Calculadora",
+    "ExecutablePath": "calc.exe"
+  }
+]
