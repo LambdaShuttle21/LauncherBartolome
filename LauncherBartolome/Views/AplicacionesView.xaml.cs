@@ -4,10 +4,13 @@ using LauncherBartolome.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 
 namespace LauncherBartolome.Views
@@ -34,18 +37,53 @@ namespace LauncherBartolome.Views
         public string CurrentBannerTitle => _db.Banners.Count == 0 ? "" : _db.Banners[_bannerIndex].Title;
         public string CurrentBannerSubtitle => _db.Banners.Count == 0 ? "" : _db.Banners[_bannerIndex].Subtitle;
 
+        private System.Windows.Media.ImageSource? _currentBannerImage;
         public System.Windows.Media.ImageSource? CurrentBannerImage
         {
-            get
+            get => _currentBannerImage;
+            set
             {
-                if (_db.Banners.Count == 0) return null;
-                try
-                {
-                    return new System.Windows.Media.Imaging.BitmapImage(
-                        new Uri(_db.Banners[_bannerIndex].ImagePath, UriKind.RelativeOrAbsolute));
-                }
-                catch { return null; }
+                _currentBannerImage = value;
+                OnPropertyChanged(nameof(CurrentBannerImage));
             }
+        }
+
+        private async Task<BitmapImage> LoadBannerImageAsync(string imageUrl)
+    {
+        try
+        {
+            using HttpClient client = new HttpClient();
+            byte[] imageBytes = await client.GetByteArrayAsync(imageUrl);
+
+            using MemoryStream ms = new MemoryStream(imageBytes);
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.StreamSource = ms;
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            return bitmap;
+        }
+        catch
+        {
+            return new BitmapImage(new Uri("pack://application:,,,/Assets/banner-fallback.jpg"));
+        }
+    }
+        private async Task UpdateCurrentBannerAsync()
+        {
+            if (_db.Banners.Count == 0)
+            {
+                CurrentBannerImage = null;
+                OnPropertyChanged(nameof(CurrentBannerTitle));
+                OnPropertyChanged(nameof(CurrentBannerSubtitle));
+                return;
+            }
+
+            OnPropertyChanged(nameof(CurrentBannerTitle));
+            OnPropertyChanged(nameof(CurrentBannerSubtitle));
+
+            CurrentBannerImage = await LoadBannerImageAsync(_db.Banners[_bannerIndex].ImagePath);
         }
 
         public AplicacionesView(AppDbService db)
@@ -64,14 +102,12 @@ namespace LauncherBartolome.Views
                 Interval = TimeSpan.FromSeconds(6)
             };
 
-            _bannerTimer.Tick += (_, __) =>
+            _bannerTimer.Tick += async (_, __) =>
             {
                 if (_db.Banners.Count == 0) return;
 
                 _bannerIndex = (_bannerIndex + 1) % _db.Banners.Count;
-                OnPropertyChanged(nameof(CurrentBannerTitle));
-                OnPropertyChanged(nameof(CurrentBannerSubtitle));
-                OnPropertyChanged(nameof(CurrentBannerImage));
+                await UpdateCurrentBannerAsync();
             };
 
             _bannerTimer.Start();
@@ -81,6 +117,7 @@ namespace LauncherBartolome.Views
             _appsView.Filter = FilterApps;
 
             DataContext = this;
+            Loaded += async (_, __) => await InitializeBannersAsync();
         }
 
         private void OpenBannerLink()
@@ -164,6 +201,19 @@ namespace LauncherBartolome.Views
         {
             if (e.Key == System.Windows.Input.Key.Escape)
                 SearchBox.Text = string.Empty;
+        }
+
+        private async Task InitializeBannersAsync()
+        {
+            try
+            {
+                await _db.LoadBannersFromApiAsync();
+                await UpdateCurrentBannerAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error cargando banners desde la API: {ex.Message}");
+            }
         }
     }
 

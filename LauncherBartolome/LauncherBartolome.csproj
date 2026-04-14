@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="apps.json" />
+    <None Remove="Assets\banner-fallback.jpg" />
     <None Remove="Assets\banner1.png" />
     <None Remove="Assets\BartolomeLogo.png" />
     <None Remove="Assets\BartolomeLogoNoBackground.png" />
@@ -35,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\banner-fallback.jpg" />
     <Resource Include="Assets\banner1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

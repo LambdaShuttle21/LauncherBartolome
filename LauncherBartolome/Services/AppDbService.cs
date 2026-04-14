@@ -6,9 +6,25 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Media.Imaging;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace LauncherBartolome.Services
 {
+    public class BannerApiResponse
+    {
+        public List<BannerDto> Banners { get; set; } = new();
+    }
+
+    public class BannerDto
+    {
+        public string Title { get; set; } = "";
+        public string Subtitle { get; set; } = "";
+        public string ImagePath { get; set; } = "";
+        public string LinkUrl { get; set; } = "";
+        public int SortOrder { get; set; }
+    }
     public class AppDbService
     {
         public ObservableCollection<AppItem> Apps { get; } = new();
@@ -56,7 +72,7 @@ namespace LauncherBartolome.Services
 
             foreach (var r in rows)
             {
-                var item = new AppItem//construye item(AppItem) a partir de var r con su nombre y ruta
+                var item = new AppItem
                 {
                     Name = r.Name,
                     ExecutablePath = r.ExecutablePath
@@ -71,13 +87,7 @@ namespace LauncherBartolome.Services
                     IconHelper.TryLoadIcon(item);
                 }
 
-                Apps.Add(item);//agrego a la observable list cada item
-
-                Banners.Clear();
-                foreach (var b in db.Banners.AsNoTracking().OrderBy(x => x.SortOrder).ToList())
-                {
-                    Banners.Add(b);
-                }
+                Apps.Add(item);
             }
         }
 
@@ -96,5 +106,38 @@ namespace LauncherBartolome.Services
 
             db.SaveChanges();
         }
+
+        public async Task LoadBannersFromApiAsync()
+        {
+            using var client = new HttpClient();
+
+            string json = await client.GetStringAsync("http://localhost:8080/launcher-data");
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var response = JsonSerializer.Deserialize<BannerApiResponse>(json, options);
+
+            Banners.Clear();
+
+            if (response?.Banners != null)
+            {
+                foreach (var b in response.Banners.OrderBy(x => x.SortOrder))
+                {
+                    Banners.Add(new BannerEntity
+                    {
+                        Title = b.Title,
+                        Subtitle = b.Subtitle,
+                        ImagePath = b.ImagePath,
+                        LinkUrl = b.LinkUrl,
+                        SortOrder = b.SortOrder
+                    });
+                }
+            }
+        }
     }
+
+
 }
