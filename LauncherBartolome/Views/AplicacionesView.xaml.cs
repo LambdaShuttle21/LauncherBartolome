@@ -105,9 +105,11 @@ namespace LauncherBartolome.Views
             _bannerTimer.Tick += async (_, __) =>
             {
                 if (_db.Banners.Count == 0) return;
-
+                else
+                {
                 _bannerIndex = (_bannerIndex + 1) % _db.Banners.Count;
                 await UpdateCurrentBannerAsync();
+                }
             };
 
             _bannerTimer.Start();

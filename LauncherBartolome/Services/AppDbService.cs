@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace LauncherBartolome.Services
 {
@@ -111,7 +112,11 @@ namespace LauncherBartolome.Services
         {
             using var client = new HttpClient();
 
-            string json = await client.GetStringAsync("http://localhost:8080/launcher-data");
+            string apiUrl = ConfigurationManager.AppSettings["LauncherApiUrl"]
+            ?? "http://localhost:8080/launcher-data";//Url en config, sino existe
+            //usa fallback 
+
+            string json = await client.GetStringAsync(apiUrl);
 
             var options = new JsonSerializerOptions
             {
