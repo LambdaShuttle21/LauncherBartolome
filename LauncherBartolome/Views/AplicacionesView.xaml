@@ -6,64 +6,24 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="30">
 
+            <!-- TITULO -->
             <Border Background="#1C1C1C"
-        CornerRadius="10"
-        Padding="15"
-        Margin="0,0,0,20">
-
+                    CornerRadius="10"
+                    Padding="15"
+                    Margin="0,0,0,20">
                 <TextBlock Text="Aplicaciones"
-               Foreground="White"
-               FontSize="22"
-               FontWeight="SemiBold"/>
+                           Foreground="White"
+                           FontSize="22"
+                           FontWeight="SemiBold"/>
             </Border>
 
+            <!-- BUSCADOR -->
             <Border Background="#1C1C1C"
-                    CornerRadius="14"
-                    Padding="16"
+                    CornerRadius="10"
+                    Padding="10"
                     Margin="0,0,0,15"
                     BorderBrush="#222"
                     BorderThickness="1">
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="240"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="140"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Border Grid.Column="0" CornerRadius="10" ClipToBounds="True" Margin="0,0,14,0">
-                        <Image Source="{Binding CurrentBannerImage}"
-                               Height="100"
-                               Stretch="UniformToFill"/>
-                    </Border>
-
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding CurrentBannerTitle}"
-                                   Foreground="White"
-                                   FontSize="18"
-                                   FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding CurrentBannerSubtitle}"
-                                   Foreground="#BDBDBD"
-                                   FontSize="13"
-                                   TextWrapping="Wrap"
-                                   Margin="0,6,0,0"/>
-                    </StackPanel>
-
-                    <Button Grid.Column="2"
-                            Content="Ver mas"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Height="34"
-                            VerticalAlignment="Center"
-                            Command="{Binding OpenBannerLinkCommand}"/>
-                </Grid>
-            </Border>
-
-            <Border Background="#1C1C1C"
-        CornerRadius="10"
-        Padding="10"
-        Margin="0,0,0,15"
-        BorderBrush="#222"
-        BorderThickness="1">
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -71,30 +31,28 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Lupa -->
                     <TextBlock Text="🔍"
-                   FontSize="14"
-                   VerticalAlignment="Center"
-                   Foreground="#AAAAAA"
-                   Margin="2,0,0,0"/>
+                               FontSize="14"
+                               VerticalAlignment="Center"
+                               Foreground="#AAAAAA"
+                               Margin="2,0,0,0"/>
 
-                    <!-- Input + placeholder -->
                     <Grid Grid.Column="1">
                         <TextBox x:Name="SearchBox"
-                     Height="34"
-                     VerticalContentAlignment="Center"
-                     Foreground="White"
-                     Background="#2A2A2A"
-                     BorderBrush="#333"
-                     TextChanged="SearchBox_TextChanged"
-                     Padding="10,0"
-                     KeyDown="SearchBox_KeyDown"/>
+                                 Height="34"
+                                 VerticalContentAlignment="Center"
+                                 Foreground="White"
+                                 Background="#2A2A2A"
+                                 BorderBrush="#333"
+                                 TextChanged="SearchBox_TextChanged"
+                                 Padding="10,0"
+                                 KeyDown="SearchBox_KeyDown"/>
 
                         <TextBlock Text="Buscar aplicaciones..."
-                       Foreground="#888888"
-                       Margin="14,0,0,0"
-                       VerticalAlignment="Center"
-                       IsHitTestVisible="False">
+                                   Foreground="#888888"
+                                   Margin="14,0,0,0"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -110,57 +68,73 @@
                 </Grid>
             </Border>
 
-            <Grid>
+            <!-- APPS ARRIBA -->
+            <Grid Margin="0,0,0,10">
                 <ItemsControl x:Name="AppsItems" ItemsSource="{Binding Apps}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource LauncherCardStyle}">
-                                <Grid Margin="20">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
+                            <Button
+                                Command="{Binding DataContext.OpenAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="0"
+                                Margin="0,0,12,0"
+                                Cursor="Hand"
+                                FocusVisualStyle="{x:Null}">
 
-                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Button.Template>
 
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Image Source="{Binding Icon}"
-                                       Width="32"
-                                       Height="32"
-                                       Margin="0,0,12,0"/>
+                                <Border Style="{StaticResource LauncherCardStyle}"
+                                        Padding="12"
+                                        Width="135"
+                                        Height="105">
+                                    <StackPanel HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                        <Image Source="{Binding Icon}"
+                                               Width="36"
+                                               Height="36"
+                                               Stretch="Uniform"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,0,8"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
 
-                                            <TextBlock Text="{Binding Name}"
-                                           Foreground="White"
-                                           FontSize="18"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"/>
-                                        </StackPanel>
+                                        <TextBlock Text="{Binding Name}"
+                                                   Foreground="White"
+                                                   FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   HorizontalAlignment="Center"
+                                                   MaxWidth="100"/>
 
                                         <TextBlock Text="{Binding ExecutablePath}"
-                                       Visibility="Collapsed"/>
+                                                   Visibility="Collapsed"/>
                                     </StackPanel>
-
-                                    <Button Grid.Column="1"
-                                Content="Abrir"
-                                Style="{StaticResource PrimaryButtonStyle}"
-                                Height="32"
-                                Margin="10,0,0,0"
-                                Command="{Binding DataContext.OpenAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                CommandParameter="{Binding}"/>
-                                </Grid>
-                            </Border>
+                                </Border>
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
                 <TextBlock Text="No hay resultados para tu búsqueda."
-               Foreground="#AAAAAA"
-               FontSize="13"
-               TextAlignment="Center"
-               VerticalAlignment="Center"
-               HorizontalAlignment="Center"
-               Margin="20"
-               IsHitTestVisible="False">
+                           Foreground="#AAAAAA"
+                           FontSize="13"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Margin="20"
+                           IsHitTestVisible="False">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -174,8 +148,57 @@
                 </TextBlock>
             </Grid>
 
+            <!-- BANNER DEBAJO -->
+            <Button Background="Transparent"
+        BorderThickness="0"
+        Padding="0"
+        Margin="0,0,0,10"
+        Cursor="Hand"
+        FocusVisualStyle="{x:Null}"
+        Command="{Binding OpenBannerLinkCommand}">
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="OuterBorder"
+                    Background="#1C1C1C"
+                    CornerRadius="14"
+                    Padding="12"
+                    BorderBrush="#303030"
+                    BorderThickness="1">
+
+                            <Border CornerRadius="10"
+                        ClipToBounds="True">
+                                <Image x:Name="BannerImage"
+                           Source="{Binding CurrentBannerImage}"
+                           Height="180"
+                           Stretch="UniformToFill"/>
+                            </Border>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <!-- HOVER -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="OuterBorder"
+                            Property="BorderBrush"
+                            Value="#505050"/>
+                                <Setter TargetName="BannerImage"
+                            Property="Opacity"
+                            Value="0.9"/>
+                            </Trigger>
+
+                            <!-- CLICK -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BannerImage"
+                            Property="Opacity"
+                            Value="0.8"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </StackPanel>
     </ScrollViewer>
 
 </UserControl>
-

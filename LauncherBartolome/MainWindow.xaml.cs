@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Diagnostics;
 using LauncherBartolome.Models;
+using System.Windows.Input;
 
 
 
@@ -40,6 +41,16 @@ namespace LauncherBartolome
             //las vistas se definen en otras clases fuera de la MainWindow y los estilos para cada vista se aplican desde App.xaml
             //dentro de la etiqueta de Application.Resources
 
+        }
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                WindowState = WindowState.Normal;
+                WindowStyle = WindowStyle.SingleBorderWindow;
+                ResizeMode = ResizeMode.CanResize;
+                Topmost = false;
+            }
         }
         private void SetActive(Button active)
         {
@@ -104,10 +115,15 @@ namespace LauncherBartolome
         {
             var pw = new PasswordWindow { Owner = this };
             bool? result = pw.ShowDialog();
-            if (result != true) return false;
-
-            // Ajusta a tu validación real:
-            return pw.EnteredPassword == "1234"; // ejemplo
+            if (result != true) {
+                return false;
+            } 
+            else
+            {
+                // Ajusta a tu validación real:
+                return pw.EnteredPassword == "jillvalentine"; // ejemplo
+            }
+           
         }
 
         private void TaskMgr_Click(object sender, RoutedEventArgs e)

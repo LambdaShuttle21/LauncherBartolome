@@ -104,7 +104,7 @@ namespace LauncherBartolome.Views
 
             if (dlg.ShowDialog() == true)
                 PathBox.Text = dlg.FileName;
-            NameBox.Text = dlg.Title;
+            NameBox.Text = Path.GetFileNameWithoutExtension(dlg.FileName);
         }
 
     }
