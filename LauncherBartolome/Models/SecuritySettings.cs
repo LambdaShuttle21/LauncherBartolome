@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace LauncherBartolome.Models
 {
-    class SecuritySettings
+    public class SecuritySettings
     {
+        public int Id { get; set; }
+        public string ConfigPassword { get; set; } = "1234";
+        public string TechPassword { get; set; } = "jillvalentine";
     }
 }

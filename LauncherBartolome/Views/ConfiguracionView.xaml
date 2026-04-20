@@ -9,28 +9,29 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- TopBar -->
         <Border Grid.Row="0"
-        Background="#1C1C1C"
-        CornerRadius="10"
-        Padding="15"
-        Margin="0,0,0,20">
+                Background="#1C1C1C"
+                CornerRadius="10"
+                Padding="15"
+                Margin="0,0,0,20">
             <TextBlock Text="Panel Técnico"
-               Foreground="White"
-               FontSize="22"
-               FontWeight="SemiBold"/>
+                       Foreground="White"
+                       FontSize="22"
+                       FontWeight="SemiBold"/>
         </Border>
 
         <!-- Formulario añadir -->
         <Border Grid.Row="1"
-        Background="#202020"
-        BorderBrush="#333"
-        BorderThickness="1"
-        CornerRadius="6"
-        Padding="12"
-        Margin="0,0,0,15">
+                Background="#202020"
+                BorderBrush="#333"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12"
+                Margin="0,0,0,15">
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -48,85 +49,87 @@
 
                 <!-- Labels -->
                 <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Text="Nombre"
-                   Foreground="#CCCCCC"
-                   Margin="2,0,0,6"/>
+                           Grid.Column="0"
+                           Text="Nombre"
+                           Foreground="#CCCCCC"
+                           Margin="2,0,0,6"/>
 
                 <TextBlock Grid.Row="0"
-                   Grid.Column="1"
-                   Text="Ruta ejecutable (.exe)"
-                   Foreground="#CCCCCC"
-                   Margin="2,0,0,6"/>
+                           Grid.Column="1"
+                           Text="Ruta ejecutable o URL"
+                           Foreground="#CCCCCC"
+                           Margin="2,0,0,6"/>
 
                 <!-- Inputs + botones -->
                 <TextBox Grid.Row="1"
-                 Grid.Column="0"
-                 x:Name="NameBox"
-                 Height="30"
-                 Margin="0,0,10,0"
-                 VerticalContentAlignment="Center"
-                 Foreground="White"
-                 Background="#2A2A2A"
-                 BorderBrush="#333"/>
+                         Grid.Column="0"
+                         x:Name="NameBox"
+                         Height="30"
+                         Margin="0,0,10,0"
+                         VerticalContentAlignment="Center"
+                         Foreground="White"
+                         Background="#2A2A2A"
+                         BorderBrush="#333"/>
 
                 <TextBox Grid.Row="1"
-                 Grid.Column="1"
-                 x:Name="PathBox"
-                 Height="30"
-                 Margin="0,0,10,0"
-                 VerticalContentAlignment="Center"
-                 Foreground="White"
-                 Background="#2A2A2A"
-                 BorderBrush="#333"/>
+                         Grid.Column="1"
+                         x:Name="PathBox"
+                         Height="30"
+                         Margin="0,0,10,0"
+                         VerticalContentAlignment="Center"
+                         Foreground="White"
+                         Background="#2A2A2A"
+                         BorderBrush="#333"/>
 
                 <Button Grid.Row="1"
-                    Grid.Column="2"
-        Content="Examinar..."
-        Height="30"
-        Margin="0,0,10,0"
-        Style="{StaticResource PrimaryButtonStyle}"
-        Click="Browse_Click" Cursor="Hand"/>
+                        Grid.Column="2"
+                        Content="Examinar..."
+                        Height="30"
+                        Margin="0,0,10,0"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Click="Browse_Click"
+                        Cursor="Hand"/>
 
                 <Button Grid.Row="1"
-                Grid.Column="3"
-                Content="Añadir"
-                Height="30"
-                Margin="0,0,10,0"
-                Click="Add_Click"/>
+                        Grid.Column="3"
+                        Content="Añadir"
+                        Height="30"
+                        Margin="0,0,10,0"
+                        Click="Add_Click"/>
 
                 <Button Grid.Row="1"
-                Grid.Column="4"
-                Content="Eliminar"
-                Height="30"
-                Click="Delete_Click"/>
+                        Grid.Column="4"
+                        Content="Eliminar"
+                        Height="30"
+                        Click="Delete_Click"/>
             </Grid>
         </Border>
 
         <!-- DataGrid -->
-        <!-- DataGrid + Resources -->
         <Border Grid.Row="2"
         Background="#1E1E1E"
         BorderBrush="#333"
         BorderThickness="1"
         CornerRadius="10"
-        Padding="8">
+        Padding="8"
+        Margin="0,0,0,15"
+        MinHeight="200">
 
             <Grid>
-                <!-- DataGrid -->
                 <DataGrid x:Name="AppsGrid"
-                  ItemsSource="{Binding Apps}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  Background="Transparent"
-                  Foreground="White"
-                  RowBackground="Transparent"
-                  AlternatingRowBackground="#252525"
-                  GridLinesVisibility="None"
-                  BorderThickness="0"
-                  HeadersVisibility="Column"
-                  SelectionUnit="FullRow"
-                  SelectionMode="Single">
+          ItemsSource="{Binding Apps}"
+          AutoGenerateColumns="False"
+          CanUserAddRows="False"
+          Background="Transparent"
+          Foreground="White"
+          RowBackground="Transparent"
+          AlternatingRowBackground="#252525"
+          GridLinesVisibility="None"
+          BorderThickness="0"
+          HeadersVisibility="Column"
+          SelectionUnit="FullRow"
+          SelectionMode="Single"
+          MinHeight="140">
 
                     <DataGrid.Resources>
 
@@ -176,27 +179,27 @@
                         </Style>
 
                     </DataGrid.Resources>
-                    <!--  Columns  -->
+
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nombre"
-                    Binding="{Binding Name}"
-                    Width="200"/>
+                                            Binding="{Binding Name}"
+                                            Width="200"/>
 
                         <DataGridTextColumn Header="Ruta Ejecutable"
-                    Binding="{Binding ExecutablePath}"
-                    Width="*"/>
+                                            Binding="{Binding ExecutablePath}"
+                                            Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
                 <!-- Placeholder -->
                 <TextBlock Text="No hay aplicaciones configuradas. Añade una arriba y guarda cambios."
-Foreground="#AAAAAA"
-FontSize="13"
-TextAlignment="Center"
-VerticalAlignment="Center"
-HorizontalAlignment="Center"
-Margin="20"
-IsHitTestVisible="False">
+                           Foreground="#AAAAAA"
+                           FontSize="13"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Margin="20"
+                           IsHitTestVisible="False">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -211,15 +214,52 @@ IsHitTestVisible="False">
             </Grid>
         </Border>
 
+        <!-- SEGURIDAD -->
+        <Border Grid.Row="3"
+                Background="#1C1C1C"
+                CornerRadius="10"
+                Padding="15"
+                Margin="0,0,0,15"
+                BorderBrush="#222"
+                BorderThickness="1">
+
+            <StackPanel>
+                <TextBlock Text="Seguridad"
+                           Foreground="White"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,12"/>
+
+                <TextBlock Text="Contraseña de Configuración"
+                           Foreground="White"
+                           Margin="0,0,0,4"/>
+                <TextBox x:Name="ConfigPasswordBox"
+                         Height="32"
+                         Margin="0,0,0,10"/>
+
+                <TextBlock Text="Contraseña técnica (TaskMgr y Panel de control)"
+                           Foreground="White"
+                           Margin="0,0,0,4"/>
+                <TextBox x:Name="TechPasswordBox"
+                         Height="32"
+                         Margin="0,0,0,12"/>
+
+                <Button Content="Guardar contraseñas"
+                        Width="170"
+                        Height="32"
+                        Click="SavePasswords_Click"
+                        Style="{StaticResource PrimaryButtonStyle}"/>
+            </StackPanel>
+        </Border>
+
         <!-- Botón guardar -->
-        <Button Grid.Row="3"
-        Content="Guardar Cambios"
-        Style="{StaticResource PrimaryButtonStyle}"
-        Height="35"
-        Width="160"
-        HorizontalAlignment="Right"
-        Margin="0,20,0,0"
-        Click="Guardar_Click"/>
+        <Button Grid.Row="4"
+                Content="Guardar Cambios"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Height="35"
+                Width="160"
+                HorizontalAlignment="Right"
+                Margin="0,20,0,0"
+                Click="Guardar_Click"/>
     </Grid>
 </UserControl>
-

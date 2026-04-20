@@ -54,10 +54,19 @@ namespace LauncherBartolome.Services
                         LinkUrl = "https://www.bartolomeconsultores.com/",
                         SortOrder = 2
                     }
-                    );
-
-                db.SaveChanges();
+                );
             }
+
+            if (!db.SecuritySettings.Any())
+            {
+                db.SecuritySettings.Add(new SecuritySettings
+                {
+                    ConfigPassword = "1234",
+                    TechPassword = "jillvalentine"
+                });
+            }
+
+            db.SaveChanges();
         }
 
         public void Load()
@@ -81,7 +90,7 @@ namespace LauncherBartolome.Services
 
                 if (item.isWeb)
                 {
-                    item.Icon = new BitmapImage(new Uri("pack://application:,,,/Assets/example.png"));
+                    item.Icon = GetWebIcon(item.ExecutablePath ?? "");
                 }
                 else
                 {
@@ -142,6 +151,38 @@ namespace LauncherBartolome.Services
                 }
             }
         }
+        public SecuritySettings GetSecuritySettings()
+        {
+            using var db = new LauncherDbContext();
+            return db.SecuritySettings.First();
+        }
+        public void UpdatePasswords(string configPassword, string techPassword)
+        {
+            using var db = new LauncherDbContext();
+            var settings = db.SecuritySettings.First();
+
+            settings.ConfigPassword = configPassword;
+            settings.TechPassword = techPassword;
+
+            db.SaveChanges();
+        }
+        private BitmapImage GetWebIcon(string url)
+        {
+            try
+            {
+                if (Uri.TryCreate(url, UriKind.Absolute, out Uri? uri))
+                {
+                    string faviconUrl = $"{uri.Scheme}://{uri.Host}/favicon.ico";
+                    return new BitmapImage(new Uri(faviconUrl));
+                }
+            }
+            catch
+            {
+            }
+
+            return new BitmapImage(new Uri("pack://application:,,,/Assets/example.png"));
+        }
+
     }
 
 

@@ -77,13 +77,12 @@ namespace LauncherBartolome
 
             bool? result = passwordWindow.ShowDialog();//ventana modal, bloquea MainWindow y devuvelve DialogResult(bool)
 
-            if (result == true && passwordWindow.EnteredPassword == "1234")
+            var settings = _db.GetSecuritySettings();
+
+            if (result == true && passwordWindow.EnteredPassword == settings.ConfigPassword)
             {
                 Navigate(new ConfiguracionView(_db));
                 SetActive(BtnConfig);
-                //instancia de ventana de configuracion que es mostrado
-                //por el ContentControl cambiando su contenido de forma dinamica (ContentControl is a base class for controls that
-                //contain and display a single piece of content like a new window or a button if you want it that way)
             }
             else
             {
@@ -115,15 +114,12 @@ namespace LauncherBartolome
         {
             var pw = new PasswordWindow { Owner = this };
             bool? result = pw.ShowDialog();
-            if (result != true) {
+
+            if (result != true)
                 return false;
-            } 
-            else
-            {
-                // Ajusta a tu validación real:
-                return pw.EnteredPassword == "jillvalentine"; // ejemplo
-            }
-           
+
+            var settings = _db.GetSecuritySettings();
+            return pw.EnteredPassword == settings.TechPassword;
         }
 
         private void TaskMgr_Click(object sender, RoutedEventArgs e)

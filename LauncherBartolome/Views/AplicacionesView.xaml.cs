@@ -157,7 +157,7 @@ namespace LauncherBartolome.Views
             }
             catch (Exception e)
             {
-                MessageBox.Show($"Error al abrir la aplicacion: {e.Message}");
+                MessageBox.Show($"Error al abrir la aplicación o enlace: {e.Message}"); ;
             }
 
         }

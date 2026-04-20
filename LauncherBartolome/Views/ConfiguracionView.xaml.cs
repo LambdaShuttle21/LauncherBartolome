@@ -20,6 +20,10 @@ namespace LauncherBartolome.Views
             InitializeComponent();
             _db = db;
             DataContext = this;
+
+            var settings = _db.GetSecuritySettings();
+            ConfigPasswordBox.Text = settings.ConfigPassword;
+            TechPasswordBox.Text = settings.TechPassword;
         }
 
         private void Guardar_Click(object sender, RoutedEventArgs e)
@@ -69,7 +73,7 @@ namespace LauncherBartolome.Views
             // (Opcional) Evita duplicados por ruta
             if (Apps.Any(a => string.Equals(a.ExecutablePath, path, StringComparison.OrdinalIgnoreCase)))
             {
-                MessageBox.Show("Ya existe una aplicación con esa ruta.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Ruta o URL obligatoria.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
                 PathBox.Focus();
                 PathBox.SelectAll();
                 return;
@@ -98,7 +102,7 @@ namespace LauncherBartolome.Views
         {
             var dlg = new OpenFileDialog
             {
-                Title = "Seleccionar ejecutable",
+                Title = "Seleccionar ejecutable o acceso directo",
                 Filter = "Ejecutables (*.exe)|*.exe|Todos los archivos (*.*)|*.*"
             };
 
@@ -106,7 +110,28 @@ namespace LauncherBartolome.Views
                 PathBox.Text = dlg.FileName;
             NameBox.Text = Path.GetFileNameWithoutExtension(dlg.FileName);
         }
+        private void SavePasswords_Click(object sender, RoutedEventArgs e)
+        {
+            string configPassword = ConfigPasswordBox.Text?.Trim() ?? "";
+            string techPassword = TechPasswordBox.Text?.Trim() ?? "";
 
+            if (string.IsNullOrWhiteSpace(configPassword))
+            {
+                MessageBox.Show("La contraseña de Configuración no puede estar vacía.");
+                ConfigPasswordBox.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(techPassword))
+            {
+                MessageBox.Show("La contraseña técnica no puede estar vacía.");
+                TechPasswordBox.Focus();
+                return;
+            }
+
+            _db.UpdatePasswords(configPassword, techPassword);
+            MessageBox.Show("Contraseñas actualizadas correctamente.");
+        }
     }
 
 }
