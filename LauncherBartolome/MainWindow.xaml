@@ -13,6 +13,7 @@
         WindowState="Maximized"
         Topmost="True"
         KeyDown="Window_KeyDown"
+        Icon="pack://application:,,,/Assets/icono.ico"
         WindowStartupLocation="CenterScreen">
 
     <Window.Background>
